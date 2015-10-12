@@ -55,23 +55,24 @@ namespace WinPcapSniffer
 
         public static string GetProtocol(LinkLayers type, Byte[] data)
         {
+            ip_address ip;
+            ip.byte1 = data[0];
+            ip.byte2 = data[1];
+            ip.byte3 = data[2];
+            ip.byte4 = data[3];
+            ip_header ip_h;
+            ip_h.proto = data[13];
             string packet = "" + PacketDotNet.Packet.ParsePacket(type, data);
-            if (packet.Contains("UDPPacket"))
+            switch (ip_h.proto)
             {
-                return "UDP";
+                case 0:
+                    return "TCP" + ip_h.proto.ToString("X2");
+                case 6:
+                    return "ARP" + ip_h.proto.ToString("X2");
+                case 221:
+                    return "UDP" + ip_h.proto.ToString("X2");
             }
-            else if (packet.Contains("Protocol=TCP"))
-            {
-                return "TCP";
-            }
-            else if (packet.Contains("ARPPacket"))
-            {
-                return "ARP";
-            }
-            else
-            {
-                return "I didn't think of it..";
-            }
+            return "Not Known" + ip_h.proto.ToString("X2");
         }
 
         public static string ConvertTime(int time)
@@ -87,5 +88,40 @@ namespace WinPcapSniffer
                 return time.ToString();
             }
         }
+
+        /* 4 bytes IP address */
+        struct ip_address
+        {
+            public byte byte1;
+            public byte byte2;
+            public byte byte3;
+            public byte byte4;
+        }
+
+                /* IPv4 header */
+        struct ip_header
+        {
+            public byte ver_ihl;        // Version (4 bits) + Internet header length (4 bits)
+            public byte tos;            // Type of service 
+            public ushort tlen;           // Total length 
+            public ushort identification; // Identification
+            public ushort flags_fo;       // Flags (3 bits) + Fragment offset (13 bits)
+            public byte ttl;            // Time to live
+            public byte proto;          // Protocol
+            public ushort crc;            // Header checksum
+            public ip_address saddr;      // Source address
+            public ip_address daddr;      // Destination address
+            public int op_pad;         // Option + Padding
+        }
+
+        /* UDP header*/
+        struct udp_header
+        {
+            public ushort sport;          // Source port
+            public ushort dport;          // Destination port
+            public ushort len;            // Datagram length
+            public ushort crc;            // Checksum
+        }
+
     }
 }

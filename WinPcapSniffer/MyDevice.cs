@@ -15,6 +15,11 @@ namespace WinPcapSniffer
         private static MyDevice _instance;
         public ICaptureDevice device { get; set; }
 
+        private MyDevice()
+        {
+
+        }
+
 
         public static MyDevice GetInstance()
         {

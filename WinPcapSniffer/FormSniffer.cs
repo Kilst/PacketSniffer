@@ -158,8 +158,6 @@ namespace WinPcapSniffer
             DateTime time = System.DateTime.Now;
             int len = packet.Packet.Data.Length;
             LinkLayers type = packet.Packet.LinkLayerType;
-            string seconds = PcapHelper.ConvertTime(time.Second);
-            string minutes = PcapHelper.ConvertTime(time.Minute);
 
             colour = System.Drawing.Color.LimeGreen;
             AppendTextBoxColoured("\n\n###NEW PACKET###");
@@ -171,7 +169,7 @@ namespace WinPcapSniffer
             AppendTextBoxColoured("\n\nPACKET INFO::\n\nTYPE: " + type.ToString()
                 + "\nHEADER Info: " + PacketDotNet.Packet.ParsePacket(type, data) + "\n");
 
-            AppendTextBoxColoured("\nTIME Received: " + time.Hour + ":" + minutes + ":" + seconds + ":" + time.Millisecond
+            AppendTextBoxColoured("\nTIME Received: " + time.Hour + ":" + time.Minute.ToString("00") + ":" + time.Second.ToString("00") + ":" + time.Millisecond
                 + "\nALL Bytes to HEX:: \n" + BitConverter.ToString(data) + "\n");
 
             string output = EQPacket.EQPacketOP_Target(data);
