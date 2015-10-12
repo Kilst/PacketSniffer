@@ -129,10 +129,15 @@ namespace WinPcapSniffer
         private void btnStop_Click(object sender, EventArgs e)
         {
             // Remove event handler from device
-            _instance.device.OnPacketArrival -= new SharpPcap.PacketArrivalEventHandler(device_OnPacketArrival);
-            packetEvent = false;
-            stopped = true;
-            lblListening.ForeColor = Color.Red;
+            if (_instance.device != null)
+            {
+                _instance.device.OnPacketArrival -= new SharpPcap.PacketArrivalEventHandler(device_OnPacketArrival);
+                packetEvent = false;
+                stopped = true;
+                lblListening.ForeColor = Color.Red;
+            }
+            else
+                MessageBox.Show("Already Stopped!", "Error!");
         }
 
         private void btnList_Click(object sender, EventArgs e)
