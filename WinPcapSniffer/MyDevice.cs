@@ -12,7 +12,7 @@ namespace WinPcapSniffer
 {
     public class MyDevice
     {
-        public static MyDevice _instance;
+        private static MyDevice _instance;
         public ICaptureDevice device { get; set; }
 
 
